@@ -5,7 +5,11 @@
 ![Pandas](https://img.shields.io/badge/PANDAS-150458?style=for-the-badge&logo=pandas&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/JUPYTER-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
 
----
+The data is processed using `pandas` and `numpy`.
+
+The project uses the `small` dataset.
+
+The `dataset.py` file downloads the data automatically.
 
 This data analysis project focuses on exploring and improving key aspects of hotel management within the hospitality industry. By leveraging comprehensive data, the project aims to analyze various factors that influence hotel operations, guest satisfaction, and overall business performance.
 
