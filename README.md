@@ -8,8 +8,8 @@ The project investigates the structure of music across different decades, explor
 
 ## 📌 Table of Contents
 
-1. [📦 Project Structure](#-project-structure)
-2. [📋 Project Description](#-project-description)
+1. [Project Structure](#-project-structure)
+2. [Project Description](#-project-description)
    - [1. About Dataset](#1-about-dataset)
    - [2. Dataset Preparation](#2-dataset-preparation)
    - [3. Per-Decade PCA + K-Means](#3-per-decade-pca--k-means)
@@ -18,13 +18,13 @@ The project investigates the structure of music across different decades, explor
    - [6. Summary of Findings](#6-summary-of-findings)
    - [7. Limitations](#7-limitations)
    - [8. Future Improvements](#8-future-improvements)
-3. [⚙️ Technologies Used](#%EF%B8%8F-technologies-used)
-4. [🚀 Usage](#-usage)
-5. [📚 References](#-references)
+3. [Technologies Used](#%EF%B8%8F-technologies-used)
+4. [Usage](#-usage)
+5. [References](#-references)
 
 ---
 
-## 📦 Project Structure
+## Project Structure
 
 The repository is organized into the following directories and files:
 
@@ -171,23 +171,13 @@ Therefore, the result should primarily be interpreted as a representation of **F
 
 This analysis investigates how the vocabulary used in song titles changes across decades.
 
-The most frequent words include:
+<p align="center">
+  <img src="images/Figure_2.png" width="800">
+</p>
 
-- `You`
-- `I`
-- `Me`
-- `Love`
-
-These words are common across the analysed catalogue.
-
-One notable difference is that:
-
-- `Remix`
-- `Mix`
-
-appear more prominently in the `2010s` than in the `2000s`.
-
-The word `Instrumental` is also highly frequent because many tracks contain this word directly in their titles. :contentReference[oaicite:4]{index=4}
+<p align="center">
+  <i>Figure 2. Vocabulary Evolution Across Decades.</i>
+</p>
 
 ---
 
