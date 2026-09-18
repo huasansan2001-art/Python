@@ -1,539 +1,167 @@
-# FMA Music Dataset Analysis
+# Exploring-Music-Evolution
 
-This repository contains the analysis of the **Free Music Archive (FMA)** dataset using audio features and textual metadata.
+## Overview
 
-The project investigates the structure of music across different decades, explores song title vocabulary and genre trends, and analyses how different music genres converge or diverge in audio-feature space over time.
+Music changes over time, but this evolution can be observed not only through sound, but also through the words artists choose and the ways different genres intersect.
 
----
+Using the Free Music Archive (FMA) dataset, this project explores music evolution through a sequence of visualizations. We begin with the language of song titles, move to repeated titles and shared vocabulary between genres, and finally examine how genres move closer together or further apart in audio-feature space.
 
-## 📌 Table of Contents
+The analysis is guided by four questions:
 
-1. [Project Structure](#-project-structure)
-2. [Project Description](#-project-description)
-   - [1. About Dataset](#1-about-dataset)
-   - [2. Dataset Preparation](#2-dataset-preparation)
-   - [3. Per-Decade PCA + K-Means](#3-per-decade-pca--k-means)
-   - [4. Title & Genre Exploration](#4-title--genre-exploration)
-   - [5. Genre-Pair PCA Centroid Distances](#5-genre-pair-pca-centroid-distances)
-   - [6. Summary of Findings](#6-summary-of-findings)
-   - [7. Limitations](#7-limitations)
-   - [8. Future Improvements](#8-future-improvements)
-3. [Technologies Used](#%EF%B8%8F-technologies-used)
-4. [Usage](#-usage)
-5. [References](#-references)
+1. How has the vocabulary used in song titles changed across different decades?
+2. How frequently do song titles overlap within a specific dataset?
+3. How much overlap exists between song titles of different genres?
+4. How do songs influence one another stylistically or lyrically?
 
 ---
 
-## Project Structure
+## 1. How has the vocabulary of song titles changed?
 
-The repository is organized into the following directories and files:
+The first visualization looks at the most frequent words appearing in song titles across decades.
 
-- **/data**: Contains the FMA dataset and metadata.
-- **/notebook**: Contains the Jupyter Notebook used for the analysis.
-- **dataset.py**: Handles downloading and preparing the FMA dataset.
-- **utils.py**: Provides utility functions for loading and processing data.
-- **visualization.py**: Contains functions for metadata and genre visualizations.
-- **visualizer.py**: Contains visualization functions for PCA, clustering, and genre-pair analysis.
-- **decade_analysis.py**: Performs the per-decade PCA and K-Means analysis.
-- **genre_pair_analysis.py**: Performs genre-pair centroid distance analysis.
-- **README.md**: Project documentation.
-- **requirements.txt**: Required Python packages.
+### Vocabulary Evolution Across Decades
 
----
+The word clouds show a strong continuity in the language used in song titles. Words such as **"You"**, **"I"**, **"Me"**, and **"Love"** dominate both periods, suggesting that personal pronouns and emotional themes remain common throughout the catalog.
 
-# 📋 Project Description
+At the same time, the 2010s introduce a more visible presence of words such as **"Remix"** and **"Mix"**, which are much less prominent in the 2000s. This provides a visual indication of changing naming conventions and the growing presence of remix-oriented releases.
 
-## 1. About Dataset
+The word **"Instrumental"** is also highly visible in both decades, partly because a large number of tracks use it directly in their titles.
 
-The **Free Music Archive (FMA)** is a public dataset containing approximately **106,574 Creative Commons audio tracks**.
+![Vocabulary Evolution Across Decades](path/to/vocabulary_evolution.png)
 
-The dataset was released by Defferrard et al. (2017) and was designed to support research in **music information retrieval**.
-
-Each track contains metadata such as:
-
-- Artist
-- Album
-- Track title
-- Top-level genre
-- Release date
-
-The dataset also provides **518 pre-computed audio features**, including:
-
-- `MFCC`
-- `Chroma`
-- `Spectral Centroid`
-- `Spectral Bandwidth`
-- `Spectral Rolloff`
-- `Spectral Contrast`
-- `RMSE`
-- `Zero Crossing Rate (ZCR)`
-- `Tonnetz`
-
-The FMA dataset is organised into three main subsets:
-
-| Subset | Number of Tracks |
-|---|---:|
-| `small` | 8,000 |
-| `medium` | 25,000 |
-| `large` | 106,574 |
-
-The analysis in this project primarily uses the **metadata and pre-computed audio features** rather than the raw audio files. :contentReference[oaicite:1]{index=1}
+**What the visualization tells us:**  
+Song-title vocabulary shows both continuity and change. Core emotional and personal vocabulary remains persistent, while terms associated with newer production and release practices become more visible over time.
 
 ---
 
-## 2. Dataset Preparation
+## 2. How frequently do song titles overlap?
 
-The project uses two main metadata files:
+After looking at individual words, the next question is whether artists also reuse complete song titles.
 
-- `tracks.csv`
-- `features.csv`
+### Song Title Duplication Rate Across Decades
 
-The dataset contains:
+The duplication-rate visualization compares how frequently song titles are repeated within each decade.
 
-- `106,574` tracks
-- `52` metadata columns
-- `518` audio-feature columns
+The rate increases from approximately **1.5% in the 2000s to 2.6% in the 2010s**. This means that title collisions become more common in the later period.
 
-The dataset is downloaded and extracted into the `data/` directory before running the analysis. :contentReference[oaicite:2]{index=2}
+Several factors may contribute to this pattern, including a larger number of tracks, repeated use of generic titles such as **"Untitled"** or **"Intro"**, and the growing presence of remix and cover releases.
 
----
+![Song Title Duplication Rate](path/to/title_duplication.png)
 
-## 3. Per-Decade PCA + K-Means
-
-The first part of the project investigates the structure of the audio-feature space across different decades.
-
-### 3.1 Principal Component Analysis
-
-`PCA` is used to reduce the high-dimensional audio-feature space to two dimensions.
-
-The analysis is performed on standardised audio features together with cross-feature derivations.
-
-The two-dimensional representation allows the audio-feature space to be visualised and compared across different decades.
-
-### 3.2 K-Means Clustering
-
-`K-Means` clustering is applied to the PCA representation.
-
-The number of clusters is investigated using the **elbow method** and `KneeLocator`.
-
-Only decades containing at least `30` tracks are included in the analysis.
-
-The analysed decades are:
-
-| Decade | Number of Tracks |
-|---|---:|
-| `1990s` | 87 |
-| `2000s` | 1,251 |
-| `2010s` | 3,972 |
-
-### 3.3 Results
-
-The first two principal components explain approximately **20% of the total variance**.
-
-The genres overlap substantially in the PCA-2D representation.
-
-The elbow curves are relatively smooth and do not show a strong natural clustering structure.
-
-As a result, the audio-feature space appears to behave more like a relatively continuous distribution rather than clearly separated clusters.
+**What the visualization tells us:**  
+As the catalog becomes denser, repeated song titles become more frequent. Title reuse therefore provides another dimension of change beyond the vocabulary itself.
 
 ---
 
-## 4. Title & Genre Exploration
+## 3. How much vocabulary overlap exists between genres?
 
-The second part of the project focuses on textual and metadata information from `tracks.csv`.
+The next step is to move from individual decades to relationships between genres.
 
-This section does not use the audio features.
+### Genre Vocabulary Overlap
 
-The analysis consists of four parts:
+The heatmap measures the **Jaccard similarity** of title vocabularies between genres. Higher values indicate that two genres share a larger proportion of their unique title words.
 
-1. Genre trend over time
-2. Vocabulary by decade
-3. Title duplication over time
-4. Genre vocabulary overlap
+The visualization shows that most genre pairs have relatively low overlap, with off-diagonal similarities ranging from roughly **0.08 to 0.18**.
 
----
+The strongest overlap appears among:
 
-### 4.1 Genre Trend Over Time
+- **Pop & Rock: 0.18**
+- **Folk & Rock: 0.17**
+- **Folk & Pop: 0.16**
 
-This analysis investigates how the number of tracks belonging to different top genres changes over time.
+These genres therefore share more title vocabulary with one another than with most other genres.
 
-The available data mainly covers the period from **2008 to 2017**.
+In contrast, **International** has very low overlap with the other genres, around **0.08–0.09**, while **Hip-Hop** also shows relatively distinct vocabulary.
 
-Most genres increase during the early 2010s and reach their highest levels around `2014–2016`.
+![Genre Vocabulary Overlap](path/to/genre_overlap_heatmap.png)
 
-The sharp decline in `2017` is likely related to incomplete data for the final year.
-
-Therefore, the result should primarily be interpreted as a representation of **FMA catalogue growth**, rather than overall music popularity. :contentReference[oaicite:3]{index=3}
+**What the visualization tells us:**  
+Genres are not completely isolated linguistically, but their title vocabularies remain largely distinct. The strongest overlap appears among genres that are relatively close within the popular-music landscape.
 
 ---
 
-### 4.2 Vocabulary by Decade
+## 4. Do songs and genres move closer together stylistically?
 
-This analysis investigates how the vocabulary used in song titles changes across decades.
+Shared words are only one side of musical similarity. Two genres may use different language while becoming more similar in sound.
 
-<p align="center">
-  <img src="images/Figure_2.png" width="800">
-</p>
+To explore this, the final visualizations move from text to **audio-feature space**.
 
-<p align="center">
-  <i>Figure 2. Vocabulary Evolution Across Decades.</i>
-</p>
+### Genre-Pair Distance Trends
 
----
+Genres are represented by their centroids in a two-dimensional PCA space. The distance between two genre centroids provides a visual measure of how close or far apart their audio characteristics are over time.
 
-### 4.3 Title Duplication Over Time
+A **falling line** indicates convergence, while a **rising line** indicates divergence.
 
-This analysis measures how frequently song titles are duplicated within each decade.
+![Genre Pair Distance Trends](path/to/pair_distance_trends.png)
 
-Only the `2000s` and `2010s` contain enough observations for comparison.
+Several patterns stand out in the later periods:
 
-| Decade | Duplicate Title Rate |
-|---|---:|
-| `2000s` | 1.5% |
-| `2010s` | 2.6% |
+- **Hip-Hop and Electronic** move substantially closer together, with their centroid distance decreasing from **0.84 to 0.25** between 2005 and 2010.
+- **Electronic and Instrumental** move further apart, from **7.54 to 12.87**.
+- **Electronic and Experimental** also diverge, from **5.27 to 8.76**.
+- **Electronic and International** show mild convergence, from **7.43 to 5.78**.
+- **Electronic and Folk** remain relatively stable, changing only from **12.44 to 12.39**.
 
-The duplicate-title rate therefore increases from approximately **1.5% to 2.6%**.
-
-Possible explanations include:
-
-- More tracks per artist
-- More opportunities for title collisions
-- Increased use of remix and cover titles
-- Generic titles such as `Untitled` or `Intro` :contentReference[oaicite:5]{index=5}
+These movements suggest that musical styles do not evolve in a single direction. Some genre pairs become more similar, while others become more distinct.
 
 ---
 
-### 4.4 Genre Vocabulary Overlap
+## 5. Seeing stylistic movement directly
 
-The vocabulary overlap between genres is measured using **Jaccard similarity**.
+The time-strip visualization provides another perspective by showing the actual genre clouds and their centroids across five-year periods.
 
-Jaccard similarity is calculated as:
+Rather than looking only at numerical distances, we can visually follow how the two genre distributions move through PCA space.
 
-`intersection / union`
+![Genre Pair Time Strip](path/to/pair_time_strip.png)
 
-The results show relatively low vocabulary overlap between most genres.
+This visualization makes the idea of **convergence and divergence** more intuitive:
 
-The observed off-diagonal similarities range approximately from `0.08` to `0.18`.
+- when two genre clouds move toward one another, their styles become more similar in the projected feature space;
+- when they move apart, their styles become more distinct.
 
-The highest-overlap genre pairs are:
-
-| Genre Pair | Jaccard Similarity |
-|---|---:|
-| `Pop` – `Rock` | 0.18 |
-| `Folk` – `Rock` | 0.17 |
-| `Folk` – `Pop` | 0.16 |
-
-`International` has relatively low vocabulary overlap with the other analysed genres, at approximately `0.08`.
-
-Overall, the results suggest that song-title vocabularies are largely distinct between genres, while `Pop`, `Rock`, and `Folk` show greater vocabulary similarity. :contentReference[oaicite:6]{index=6}
+The visualization therefore complements the title-based analysis: linguistic overlap tells us **what genres have in common in their titles**, while PCA distance tells us **how their sound-space positions change over time**.
 
 ---
 
-# 5. Genre-Pair PCA Centroid Distances
+## 6. From words to sound: the overall story
 
-The third part of the project investigates whether different genres become more similar or more different in audio-feature space over time.
+The visualizations reveal a layered picture of music evolution.
 
-A global `PCA` is fitted using standardised audio features and cross-feature derivations.
+Song titles show substantial continuity: words related to personal experience and emotion remain common across decades. At the same time, new terminology such as **"Remix"** becomes more prominent, indicating changes in naming conventions.
 
-Tracks are then divided into five-year periods:
+Complete title duplication also becomes more frequent, rising from about **1.5% to 2.6%** between the 2000s and 2010s. This suggests that the growing catalog contains more repeated or generic naming patterns.
 
-- `1980`
-- `1985`
-- `1990`
-- `1995`
-- `2000`
-- `2005`
-- `2010`
+Across genres, however, title vocabularies remain mostly distinct. The strongest lexical connections appear among **Pop, Rock, and Folk**, while genres such as **International** and **Hip-Hop** show more distinct vocabulary profiles.
 
-For every `(period, genre)` combination containing at least `10` tracks, a centroid is calculated in PCA-2D.
+Finally, the audio visualizations show that stylistic relationships are dynamic. Some genre pairs converge while others diverge, meaning that musical evolution is not simply a process of all genres becoming more alike.
 
-The **Euclidean distance** between genre centroids is then calculated for each period.
-
-The main research question is:
-
-> **Are genre pairs converging or diverging over time?**
-
-:contentReference[oaicite:7]{index=7}
+Together, the visualizations tell a story of **continuity, repetition, lexical separation, and selective stylistic convergence**.
 
 ---
 
-## 5.1 Data Coverage
+## Visualizations
 
-The release-date metadata in FMA is relatively sparse.
+The project focuses on the following visual analyses:
 
-Approximately `57,000` of the `106,574` tracks do not have an `album.date_released` value.
+1. **Vocabulary Evolution Across Decades**  
+   Word clouds showing the most frequent words in song titles.
 
-As a result, many tracks cannot be assigned to a five-year period.
+2. **Song Title Duplication Rate**  
+   Line chart showing the share of repeated song titles across decades.
 
-The available release-date observations are also heavily concentrated after `2000`.
+3. **Genre Vocabulary Overlap**  
+   Jaccard-similarity heatmap showing shared title vocabulary between genres.
 
-For the `small` subset:
+4. **Genre-Pair Distance Trends**  
+   Small multiples showing how genre distances change over time in PCA space.
 
-| Period | Non-null Genre Pairs |
-|---|---:|
-| `1980` | 0 |
-| `1985` | 0 |
-| `1990` | 0 |
-| `1995` | 3 |
-| `2000` | 15 |
-| `2005` | 28 |
-| `2010` | 28 |
-
-Therefore, the most reliable comparisons focus on the `2005–2010` period. :contentReference[oaicite:8]{index=8}
+5. **Genre-Pair Time Strip**  
+   Visual comparison of genre distributions and centroids across five-year periods.
 
 ---
 
-## 5.2 Distance Trends
+## Key Takeaway
 
-The distance between two genre centroids represents their relative position in PCA-2D.
+Music evolution can be seen from several complementary perspectives. The words in song titles retain strong recurring themes, titles are reused more frequently in later periods, genres maintain mostly distinct vocabularies, and their musical characteristics can either converge or diverge over time.
 
-- **Decreasing distance** → `converging`
-- **Increasing distance** → `diverging`
-- **Similar distance** → `stable`
-
-This allows the project to identify genre pairs whose audio-feature representations change substantially over time.
-
----
-
-## 5.3 Interesting Genre Pairs
-
-A genre pair is classified as interesting when its centroid distance changes by at least **30%** between the first and last available periods.
-
-For the `small` subset:
-
-`13 of 28 pairs` qualify as interesting.
-
-For the `large` subset:
-
-`65 of 120 pairs` qualify as interesting. :contentReference[oaicite:9]{index=9} :contentReference[oaicite:10]{index=10}
-
----
-
-## 5.4 Key Findings
-
-### Hip-Hop vs. Electronic
-
-The centroid distance decreases from:
-
-`0.84 → 0.25`
-
-between `2005` and `2010`.
-
-This represents a strong convergence in the PCA-2D representation.
-
-### Electronic vs. Instrumental
-
-The centroid distance increases from:
-
-`7.54 → 12.87`
-
-between `2005` and `2010`.
-
-This represents divergence in PCA-2D.
-
-### Electronic vs. Experimental
-
-The centroid distance increases from:
-
-`5.27 → 8.76`
-
-between `2005` and `2010`.
-
-This also represents divergence.
-
-### Electronic vs. International
-
-The centroid distance decreases from:
-
-`7.43 → 5.78`
-
-indicating moderate convergence.
-
-### Electronic vs. Folk
-
-The distance changes only slightly:
-
-`12.44 → 12.39`
-
-indicating a relatively stable relationship.
-
-These results are based on the actual centroid-distance matrix from the analysis. :contentReference[oaicite:11]{index=11}
-
----
-
-# 6. Summary of Findings
-
-## Section 1 — PCA + K-Means
-
-The available data provides enough observations for three decades:
-
-- `1990`
-- `2000`
-- `2010`
-
-The first two PCA components explain approximately `20%` of the variance.
-
-The genres overlap substantially in the two-dimensional representation.
-
-The elbow curves are relatively smooth, suggesting that there is no strongly separated natural cluster structure in the analysed PCA representation.
-
----
-
-## Section 2 — Title & Genre Exploration
-
-The genre trends mainly reflect changes in the composition and growth of the FMA catalogue.
-
-The title vocabulary analysis shows that common words such as `You`, `I`, `Me`, and `Love` dominate song titles.
-
-`Remix` and `Mix` become more prominent in the `2010s`.
-
-The duplicate-title rate increases from approximately `1.5%` in the `2000s` to `2.6%` in the `2010s`.
-
-Genre vocabulary overlap is generally low, with relatively higher similarity between `Pop`, `Rock`, and `Folk`. :contentReference[oaicite:12]{index=12}
-
----
-
-## Section 3 — Genre-Pair PCA Distances
-
-The genre-pair analysis identifies examples of both convergence and divergence in PCA-2D.
-
-The strongest observed movement in the `small` subset is the convergence between `Hip-Hop` and `Electronic` between `2005` and `2010`.
-
-However, these results should be interpreted carefully because PCA-2D represents only approximately `19–20%` of the total variance. :contentReference[oaicite:13]{index=13}
-
----
-
-# 7. Limitations
-
-## 7.1 PCA-2D Projection
-
-The original dataset contains approximately `500` audio features, while the centroid analysis uses only two PCA dimensions.
-
-Therefore, a movement observed in PCA-2D may not necessarily represent the same movement in the full feature space.
-
----
-
-## 7.2 Genre Composition
-
-Changes in centroid distances can reflect both:
-
-- Actual stylistic changes
-- Changes in the composition of tracks assigned to a genre
-
-Therefore, centroid movement should not automatically be interpreted as pure stylistic evolution.
-
----
-
-## 7.3 Short Time Series
-
-Some genre pairs contain only two or three available periods.
-
-Large relative changes can therefore occur because of random variation.
-
-Longer and more consistent trends provide stronger evidence than a single jump between two periods.
-
----
-
-## 7.4 Sparse Pre-2000 Data
-
-The release-date metadata is heavily concentrated after `2000`.
-
-Therefore, the project cannot provide a reliable long-term analysis extending back to the `1960s` or `1970s`.
-
-The most reliable comparisons focus on the `2005–2010` period. :contentReference[oaicite:14]{index=14}
-
----
-
-# 8. Future Improvements
-
-Several improvements could extend the analysis.
-
-### 8.1 Analyse the Large Subset
-
-Re-run the genre-pair analysis using the `large` subset.
-
-This would increase the analysis from:
-
-- `8` genres and `28` pairs
-
-to:
-
-- `16` genres and `120` pairs.
-
-### 8.2 Use Full Feature-Space Distances
-
-Calculate distances directly in the standardised feature space instead of relying only on PCA-2D.
-
-Possible approaches include:
-
-- `Euclidean distance`
-- `Mahalanobis distance`
-
-This could help determine whether observed movements are caused by the PCA projection.
-
-### 8.3 Analyse Genre Membership Stability
-
-Analyse how many tracks change their `genre_top` classification across different periods.
-
-This could help distinguish between:
-
-- `Stylistic drift`
-- `Genre-tagging drift`
-
-These extensions are also identified as reasonable next steps in the original analysis. :contentReference[oaicite:15]{index=15}
-
----
-
-# ⚙️ Technologies Used
-
-The project was developed using:
-
-- `Python`
-- `Pandas`
-- `NumPy`
-- `Scikit-learn`
-- `Matplotlib`
-- `Seaborn`
-- `librosa`
-- `PCA`
-- `K-Means`
-- `Jaccard Similarity`
-- `Euclidean Distance`
-
----
-
-# 🚀 Usage
-
-This project is designed to be completed in the following steps:
-
-1. **Download the Repository**: Clone or download this repository to your local machine.
-
-2. **Install the Requirements**: Install all required Python packages listed in `requirements.txt`.
-
-3. **Prepare the Dataset**: Download the FMA dataset and place the required metadata files inside the `data/` directory.
-
-4. **Run the Notebook**: Open the project notebook in Jupyter Notebook or JupyterLab.
-
-5. **Run the Analysis**:
-   - Per-decade PCA + K-Means
-   - Genre trend analysis
-   - Song-title vocabulary analysis
-   - Title duplication analysis
-   - Genre vocabulary overlap
-   - Genre-pair PCA centroid distances
-
-6. **Explore the Results**: Review the generated visualisations and tables to investigate patterns in the FMA dataset.
-
----
-
-# 📚 References
-
-- Defferrard, M., Benzi, K., Vandergheynst, P., & Bresson, X. (2017). **FMA: A Dataset for Music Analysis**.
-
-- Free Music Archive: **FMA Dataset**
-
-- Scikit-learn documentation: **Principal Component Analysis (PCA)**
-
-- Scikit-learn documentation: **K-Means Clustering**
-
-- Jaccard Similarity: **Set-based similarity measure**
+Rather than showing one universal direction of musical change, the visualizations reveal a more nuanced process in which **some elements remain stable while others evolve and interact differently across genres**.
